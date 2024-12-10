@@ -1,9 +1,9 @@
-using WorkerService.ExternalServices;
 using Hangfire;
 using Hangfire.SqlServer;
+using WorkerService.ExternalServices;
 using WorkerService.InternalServices;
 
-namespace WorkerService;
+namespace WorkerService.DependencyInjections;
 
 public static class DependencyInjection
 {

@@ -1,6 +1,6 @@
-namespace WorkerService.InternalServices;
+namespace WorkerService.InternalServices.Upsert;
 
-public sealed record UpsertCoinsRequest(
+public sealed record UpsertCoinRequest(
 	string Symbol,
 	int RankByMarketCap,
 	decimal PercentageChangeInOneHour,

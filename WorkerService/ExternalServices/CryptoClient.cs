@@ -27,4 +27,19 @@ public sealed class CryptoClient : ICryptoClient
 			return null;
 		}
 	}
+
+	public async Task<Dictionary<string, IndividualExchangeResponse>?> GetExchangesAsync()
+	{
+		try
+		{
+			HttpClient client = _httpClientFactory.CreateClient(CryptoConfig.ClientKey);
+
+			return await client.GetFromJsonAsync<Dictionary<string, IndividualExchangeResponse>>("/api/exchanges/");
+		}
+		catch (HttpRequestException ex)
+		{
+			_logger.LogError("An error occurred when obtaining coins: {Exception}", ex);
+			return null;
+		}
+	}
 }

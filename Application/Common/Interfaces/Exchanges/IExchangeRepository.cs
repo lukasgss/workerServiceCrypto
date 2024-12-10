@@ -6,7 +6,7 @@ namespace Application.Common.Interfaces.Exchanges;
 
 public interface IExchangeRepository : IGenericRepository<Exchange>
 {
-    Task<IReadOnlyDictionary<string, Exchange>> GetExistingExchangesAsync(IEnumerable<string> names);
-    Task<PaginatedList<ExchangeResponse>> GetPaginatedExchangesAsync(int pageNumber, int pageSize);
-    Task<ExchangeResponse?> GetExchangeByIdAsync(Guid id);
+	Task<IReadOnlyDictionary<string, Exchange>> GetExistingExchangesAsync(IEnumerable<string> nameIds);
+	Task<PaginatedList<ExchangeResponse>> GetPaginatedExchangesAsync(int pageNumber, int pageSize);
+	Task<ExchangeResponse?> GetExchangeByIdAsync(Guid id);
 }

@@ -26,9 +26,9 @@ public sealed class CoinRepository : GenericRepository<Coin>, ICoinRepository
 				c.Symbol,
 				c.RankByMarketCap,
 				c.PercentageChangeInOneHour,
-				Price.Create(c.Price.Amount, c.Price.Code),
-				Price.Create(c.MarketCap.Amount, c.MarketCap.Code),
-				Price.Create(c.TradingVolume.Amount, c.TradingVolume.Code)))
+				Money.Create(c.Money.Amount, c.Money.Currency),
+				Money.Create(c.MarketCap.Amount, c.MarketCap.Currency),
+				Money.Create(c.TradingVolume.Amount, c.TradingVolume.Currency)))
 			.SingleOrDefaultAsync();
 	}
 
@@ -41,7 +41,7 @@ public sealed class CoinRepository : GenericRepository<Coin>, ICoinRepository
 				c.Symbol,
 				c.RankByMarketCap,
 				c.PercentageChangeInOneHour,
-				c.Price,
+				c.Money,
 				c.MarketCap,
 				c.TradingVolume))
 			.ToPaginatedListAsync(pageNumber, pageSize);

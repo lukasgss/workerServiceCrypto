@@ -1,5 +1,6 @@
 using WorkerService.ExternalServices;
 using WorkerService.InternalServices;
+using WorkerService.InternalServices.Upsert;
 
 namespace WorkerService;
 
@@ -16,7 +17,7 @@ public sealed class Worker
 		_internalApiClient = internalApiClient;
 	}
 
-	public async Task Execute()
+	public async Task ExecuteCoins()
 	{
 		CoinResponse? coins = await _cryptoClient.GetCoinsAsync();
 		if (coins is null)
@@ -24,8 +25,8 @@ public sealed class Worker
 			return;
 		}
 
-		var upsertCoinsRequests = coins.Data
-			.Select(c => new UpsertCoinsRequest(
+		var upsertCoinsRequest = coins.Data
+			.Select(c => new UpsertCoinRequest(
 				c.Symbol,
 				c.Rank,
 				decimal.Parse(c.PercentChange1H),
@@ -33,6 +34,26 @@ public sealed class Worker
 				new PriceRequest(Currency, decimal.Parse(c.MarketCapUsd)),
 				new PriceRequest(Currency, c.Volume24)));
 
-		await _internalApiClient.UpsertCoinsAsync(upsertCoinsRequests);
+		await _internalApiClient.UpsertCoinsAsync(upsertCoinsRequest);
+	}
+
+	public async Task ExecuteExchanges()
+	{
+		var exchanges = await _cryptoClient.GetExchangesAsync();
+		if (exchanges is null)
+		{
+			return;
+		}
+
+		var upsertExchangesRequest = exchanges
+			.Select(e => new UpsertExchangeRequest(
+				e.Value.Name,
+				e.Value.NameId,
+				new PriceRequest(Currency, e.Value.VolumeUsd),
+				e.Value.ActivePairs,
+				e.Value.Url,
+				e.Value.Country));
+
+		await _internalApiClient.UpsertExchangesAsync(upsertExchangesRequest);
 	}
 }

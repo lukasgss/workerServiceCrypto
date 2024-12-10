@@ -2,38 +2,39 @@ namespace Domain.Common;
 
 public abstract class ValueObject
 {
-    protected static bool EqualOperator(ValueObject left, ValueObject right)
-    {
-        if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
-        {
-            return false;
-        }
-        return ReferenceEquals(left, right) || left.Equals(right);
-    }
+	protected static bool EqualOperator(ValueObject left, ValueObject right)
+	{
+		if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+		{
+			return false;
+		}
 
-    protected static bool NotEqualOperator(ValueObject left, ValueObject right)
-    {
-        return !(EqualOperator(left, right));
-    }
+		return left != null && right != null && (ReferenceEquals(left, right) || left.Equals(right));
+	}
 
-    protected abstract IEnumerable<object> GetEqualityComponents();
+	protected static bool NotEqualOperator(ValueObject left, ValueObject right)
+	{
+		return !(EqualOperator(left, right));
+	}
 
-    public override bool Equals(object obj)
-    {
-        if (obj == null || obj.GetType() != GetType())
-        {
-            return false;
-        }
+	protected abstract IEnumerable<object> GetEqualityComponents();
 
-        var other = (ValueObject)obj;
+	public override bool Equals(object? obj)
+	{
+		if (obj == null || obj.GetType() != GetType())
+		{
+			return false;
+		}
 
-        return this.GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
-    }
+		ValueObject other = (ValueObject)obj;
 
-    public override int GetHashCode()
-    {
-        return GetEqualityComponents()
-            .Select(x => x != null ? x.GetHashCode() : 0)
-            .Aggregate((x, y) => x ^ y);
-    }
+		return this.GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+	}
+
+	public override int GetHashCode()
+	{
+		return GetEqualityComponents()
+			.Select(x => x.GetHashCode())
+			.Aggregate((x, y) => x ^ y);
+	}
 }

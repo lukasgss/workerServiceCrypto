@@ -44,8 +44,8 @@ public sealed class CoinService : ICoinService
 			if (existingCoins.TryGetValue(coin.Symbol, out var existingCoin))
 			{
 				existingCoin.UpdateMarketData(
-					Price.Create(coin.MarketCap.Amount, coin.MarketCap.Currency),
-					Price.Create(coin.TradingVolume.Amount, coin.TradingVolume.Currency),
+					Money.Create(coin.MarketCap.Amount, coin.MarketCap.Currency),
+					Money.Create(coin.TradingVolume.Amount, coin.TradingVolume.Currency),
 					coin.PercentageChangeInOneHour,
 					coin.RankByMarketCap);
 
@@ -57,9 +57,9 @@ public sealed class CoinService : ICoinService
 					coin.Symbol,
 					coin.RankByMarketCap,
 					coin.PercentageChangeInOneHour,
-					Price.Create(coin.Price.Amount, coin.Price.Currency),
-					Price.Create(coin.MarketCap.Amount, coin.MarketCap.Currency),
-					Price.Create(coin.TradingVolume.Amount, coin.TradingVolume.Currency)));
+					Money.Create(coin.Price.Amount, coin.Price.Currency),
+					Money.Create(coin.MarketCap.Amount, coin.MarketCap.Currency),
+					Money.Create(coin.TradingVolume.Amount, coin.TradingVolume.Currency)));
 			}
 		}
 
