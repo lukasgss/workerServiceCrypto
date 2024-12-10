@@ -7,6 +7,6 @@ public sealed record CoinResponse(
 	string Symbol,
 	int RankByMarketCap,
 	decimal PercentageChangeInOneHour,
-	Money Money,
+	Money Price,
 	Money MarketCap,
 	Money TradingVolume);
