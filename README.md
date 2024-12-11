@@ -1,5 +1,5 @@
 # Functioning
-The software uses CoinLore's API to retrieve cryptocurrency coins and exchanges, and displays it in a filterable grid using Vue.js with TypeScript in the front end. It does upsert functionality using a Hangfire job that executes every hour in a worker service.
+The software uses CoinLore's API to retrieve cryptocurrency coins and exchanges, and displays it in a filterable grid or in an individual page for the coin, everything made using Vue.js with TypeScript. It does upsert functionality using a Hangfire job that executes every hour in a worker service.
 
 The documentation of CoinLore's API used to retrive the data can be found [here](https://www.coinlore.com/cryptocurrency-data-api).
 
@@ -17,7 +17,7 @@ It's responsible for defining the jobs needed to be done to accomplish a certain
 It's the core of the application, where all business rules are defined. It cointains the domain entities and business rules that operate on these entities. Since this is a very simple project, there aren't many business rules in the model, but it gets increasingly more important as the domain complexity increases.
 
 ## Infrastructure
-Offers the implementations to external services like database access, external API calls, etc.
+Offers the implementations to external services like external API calls, database access (SQL Server), etc.
 
 Given these layers, this is how the project dependencies look like:
 
@@ -34,6 +34,19 @@ dotnet ef --startup-project ../Api/Api.csproj database update
 ```
 
 After that, you can run the project's API and the worker service.
+
+# Unit tests
+There are a few unit tests to the domain entities, making sure they all guarantee their [invariancies](https://ddd-practitioners.com/home/glossary/business-invariant/), are always in a valid state and executes their business logic correctly. The tests were implemented using xUnit, and you can execute them by simply running:
+```bash
+dotnet test
+```
+
+# Worker Service
+The worker service project retrieves the data from CoinLore's API, processes them to the format the API I built expects and send them on their respective endpoint every hour, with the schedule done by Hangfire. The endpoints it calls to upsert the data are: 
+
+```POST /api/coins```
+and 
+```POST /api/exchanges```
 
 # Observations
 The configuration files that have sensitive data where added to the repository on purpose to facilitate the database creation and testing the application in general.
