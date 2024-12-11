@@ -49,4 +49,4 @@ and
 ```POST /api/exchanges```
 
 # Observations
-The configuration files that have sensitive data where added to the repository on purpose to facilitate the database creation and testing the application in general.
+The configuration files that have sensitive data were added to the repository on purpose to facilitate the database creation and testing the application in general.
