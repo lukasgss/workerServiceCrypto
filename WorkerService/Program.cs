@@ -1,30 +1,26 @@
 using Hangfire;
-using WorkerService;
 using WorkerService.DependencyInjections;
+using WorkerService.Hangfire;
 
-var builder = Host.CreateApplicationBuilder(args);
+namespace WorkerService;
 
-builder.Services.AddWorkerService(builder.Configuration);
-builder.Services.AddHangfireServer();
-
-var host = builder.Build();
-
-using (IServiceScope scope = host.Services.CreateScope())
+public class Program
 {
-	Worker worker = scope.ServiceProvider.GetRequiredService<Worker>();
+	public static void Main(string[] args)
+	{
+		var host = CreateHostBuilder(args).Build();
 
-	BackgroundJob.Enqueue(() => worker.ExecuteCoins());
-	BackgroundJob.Enqueue(() => worker.ExecuteExchanges());
+		DatabaseInitializer.InitializeDatabase(host.Services.GetRequiredService<IConfiguration>());
+
+		host.Run();
+	}
+
+	public static IHostBuilder CreateHostBuilder(string[] args) =>
+		Host.CreateDefaultBuilder(args)
+			.ConfigureServices((hostContext, services) =>
+			{
+				services.AddWorkerService(hostContext.Configuration);
+				services.AddHangfireServer();
+				services.AddHostedService<HangfireWorker>();
+			});
 }
-
-RecurringJob.AddOrUpdate<Worker>(
-	"coin-job",
-	job => job.ExecuteCoins(),
-	Cron.Hourly());
-
-RecurringJob.AddOrUpdate<Worker>(
-	"exchange-job",
-	job => job.ExecuteExchanges(),
-	Cron.Hourly());
-
-await host.RunAsync();
