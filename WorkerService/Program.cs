@@ -20,7 +20,6 @@ public class Program
 			.ConfigureServices((hostContext, services) =>
 			{
 				services.AddWorkerService(hostContext.Configuration);
-				services.AddHangfireServer();
 				services.AddHostedService<HangfireWorker>();
 			});
 }

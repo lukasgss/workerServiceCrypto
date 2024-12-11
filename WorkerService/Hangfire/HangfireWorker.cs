@@ -5,6 +5,8 @@ namespace WorkerService.Hangfire;
 public sealed class HangfireWorker : IHostedService
 {
 	private readonly IServiceProvider _serviceProvider;
+	private const string CoinJob = "coin-job";
+	private const string ExchangeJob = "exchange-job";
 
 	public HangfireWorker(IServiceProvider serviceProvider)
 	{
@@ -13,23 +15,18 @@ public sealed class HangfireWorker : IHostedService
 
 	public Task StartAsync(CancellationToken cancellationToken)
 	{
-		using (var scope = _serviceProvider.CreateScope())
-		{
-			Worker worker = scope.ServiceProvider.GetRequiredService<Worker>();
-
-			BackgroundJob.Enqueue(() => worker.ExecuteCoins());
-			BackgroundJob.Enqueue(() => worker.ExecuteExchanges());
-		}
-
 		RecurringJob.AddOrUpdate<Worker>(
-			"coin-job",
+			CoinJob,
 			job => job.ExecuteCoins(),
-			Cron.Hourly());
+			Cron.Hourly);
 
 		RecurringJob.AddOrUpdate<Worker>(
-			"exchange-job",
+			ExchangeJob,
 			job => job.ExecuteExchanges(),
-			Cron.Hourly());
+			Cron.Hourly);
+
+		RecurringJob.TriggerJob(CoinJob);
+		RecurringJob.TriggerJob(ExchangeJob);
 
 		return Task.CompletedTask;
 	}

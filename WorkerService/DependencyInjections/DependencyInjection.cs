@@ -38,6 +38,8 @@ public static class DependencyInjection
 					});
 		});
 
+		services.AddHangfireServer();
+
 		services.AddHttpClient(CryptoConfig.ClientKey,
 			client => { client.BaseAddress = CryptoConfig.BaseUrl; });
 
