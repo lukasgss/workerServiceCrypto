@@ -49,4 +49,5 @@ and
 ```POST /api/exchanges```
 
 # Observations
-The configuration files that have sensitive data were added to the repository on purpose to facilitate the database creation and testing the application in general.
+- The configuration files that have sensitive data were added to the repository on purpose to facilitate the database creation and testing the application in general;
+- For simplicity reasons, it wasn't added any kind of authorization to the upsert endpoints, potentially allowing other unauthorized users to insert data in the application. That would be something to kep in mind if this application was ever going to production.
