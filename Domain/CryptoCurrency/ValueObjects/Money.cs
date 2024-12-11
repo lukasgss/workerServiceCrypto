@@ -24,7 +24,7 @@ public sealed class Money : ValueObject
 	{
 		if (!ValidCurrencies.Contains(code.ToUpperInvariant()))
 		{
-			throw new ArgumentException($"Invalid currency code {code}.");
+			throw new ArgumentException($"Invalid currency code.");
 		}
 
 		if (amount < 0)
@@ -32,7 +32,7 @@ public sealed class Money : ValueObject
 			throw new ArgumentException("Amount cannot be negative.");
 		}
 
-		return new Money(amount, code);
+		return new Money(amount, code.ToUpperInvariant());
 	}
 
 	protected override IEnumerable<object> GetEqualityComponents()

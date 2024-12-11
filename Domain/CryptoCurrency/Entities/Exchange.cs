@@ -10,7 +10,7 @@ public sealed class Exchange : BaseEntity, IAggregateRoot
 	{
 	}
 
-	public Exchange(string name, string nameId, Money volume, string country, string url, int activePairs)
+	public Exchange(string name, string nameId, Money volume, string? country, string url, int activePairs)
 	{
 		ValidateInvariantsOnCreation(name, nameId, url, activePairs);
 
@@ -31,7 +31,7 @@ public sealed class Exchange : BaseEntity, IAggregateRoot
 
 	public void UpdateMarketData(Money volume, string? country, string? url, int activePairs)
 	{
-		if (!string.IsNullOrEmpty(url) && !Uri.IsWellFormedUriString(url, UriKind.Absolute))
+		if (!string.IsNullOrEmpty(url?.Trim()) && !Uri.IsWellFormedUriString(url, UriKind.Absolute))
 		{
 			throw new ArgumentException("Invalid exchange URL.");
 		}
@@ -43,7 +43,7 @@ public sealed class Exchange : BaseEntity, IAggregateRoot
 
 		Volume = volume;
 		Country = string.IsNullOrEmpty(country?.Trim()) ? null : country;
-		Url = string.IsNullOrEmpty(url?.Trim()) ? null : url;
+		Url = string.IsNullOrEmpty(url) ? null : url;
 		ActivePairs = activePairs;
 	}
 
